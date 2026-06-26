@@ -195,6 +195,7 @@ function init() {
     getUserDataFromCache()
     getPCsFromCache()
     updateUI()
+    renderPC()
 }
 
 
