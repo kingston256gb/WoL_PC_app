@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoL PC</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <section id="register-modal">
+        <div class="register-inner">
+            <h1 class="register-title">Вход</h1>
+            <div class="input-block">
+                <span class="ib-title">IP:</span>
+                <input type="text" id="ip" placeholder="0.0.0.0">
+            </div>
+            <div class="input-block">
+                <span class="ib-title">Порт:</span>
+                <input type="number" id="port" placeholder="0000">
+            </div>
+            <button id="enter" class="btn">Войти</button>
+        </div>
+    </section>
+
+    <section class="main">
+        <div class="main-inner">
+            <h1 class="main-title">Компьютеры</h1>
+            <button id="addBtn">Добавить</button>
+            <ul id="pcList">
+                <li class="empty-li">Пусто</li>
+            </ul>
+            <div class="output">
+                <div class="output-title">Консоль:</div>
+                <span id="outputMessage" class="empty">Пока пусто</span>
+            </div>
+            <button class="btn" id="reset">Стереть все данные</button>
+        </div>
+    </section>
+
+    <section id="addModal" >
+        <div class="add-modal">
+            <h1 class="add-title">Добавить ПК</h1>
+            <div class="add-inp">
+                <span>Имя пк:</span>
+                <input type="text" id="name">
+            </div>
+            <div class="add-inp last">
+                <span>MAC-адресс:</span>
+                <input type="text" id="mac">
+            </div>
+            <button id="submit">Добавить</button>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
