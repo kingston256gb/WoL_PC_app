@@ -148,7 +148,7 @@ function deletePc(mac) {
 // Вкдючение компа
 async function turnPc(mac) {
     try {
-        const res = await fetch(`http://${ip}:${port}/wake`, {
+        const res = await fetch(`https://${ip}:${port}/wake`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
