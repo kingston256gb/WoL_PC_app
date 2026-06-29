@@ -75,23 +75,26 @@ function getPCsFromCache() {
             throw new Error("Список компов не закэширован");
         }
         const pcs = JSON.parse(PCS_UNCACHED)
-        if (Array.isArray(pcs)) {
-            PCs = pcs
-            return
+        if (!Array.isArray(pcs)) {
+            throw new Error("Список компов испорчен");
         }
-        throw new Error("Список компов испорчен");
+
         let hasId = true
-        PCs.forEach(pc => {
-            if (! pc.id) {
-                pc.id = PCs.indexOf(pc) + 1
+        pcs.forEach((pc, index) => {
+            if (!pc.id) {
+                pc.id = index + 1
                 hasId = false
             }
         })
-        if (! hasId) {
-            cachePCS(PCs)
+
+        if (!hasId) {
+            cachePCS(pcs)
         }
+
+        PCs = pcs
     } catch (error) {
         console.error(error.message)
+        PCs = []
     }
 }
 
