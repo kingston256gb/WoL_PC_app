@@ -296,3 +296,68 @@ input:focus{
     margin-left: 10px;
     color: var(--text-secondary);
 }
+#editModal{
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+}
+.edit-modal{
+    width: min(400px, 100% - 40px);
+    background: var(--bg-secondary);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+.edit-inp{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+}
+.edit-btns{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+.edit-btns button{
+    height: 40px;
+    font-family: inherit;
+    color: var(--text);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-size: 18px;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+#submitEdit{
+    background: var(--accent);
+}
+#submitEdit:active{
+    transform: scale(0.9);
+    background-color: var(--accent-hover);
+}
+#cancelEdit{
+    background: transparent;
+    color: var(--danger);
+    border-color: var(--danger);
+}
+#cancelEdit:active{
+    transform: scale(0.9);
+    background: var(--danger);
+}
+#editModal{
+    display: none;
+}
+#editModal.active{
+    display: flex;
+}

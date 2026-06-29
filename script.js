@@ -20,6 +20,14 @@ const submit = document.querySelector('#submit')
 // Стереть все данные
 const clear = document.querySelector('#reset')
 
+// Модальное окно имзменения компа
+const editModal = document.querySelector('#editModal')
+let editPcId = null
+const rename = document.querySelector('#nameEdit')
+const remac = document.querySelector('#macEdit')
+const confirmEdit = document.querySelector('#submitEdit')
+const cancelEdit = document.querySelector('#cancelEdit')
+
 // Переменные
 let PCs = []
 let ip = ''
@@ -72,6 +80,16 @@ function getPCsFromCache() {
             return
         }
         throw new Error("Список компов испорчен");
+        let hasId = true
+        PCs.forEach(pc => {
+            if (! pc.id) {
+                pc.id = PCs.indexOf(pc) + 1
+                hasId = false
+            }
+        })
+        if (! hasId) {
+            cachePCS(PCs)
+        }
     } catch (error) {
         console.error(error.message)
     }
@@ -96,52 +114,58 @@ function renderPC() {
     pcList.innerHTML = ''
     if (PCs.length !== 0 && Array.isArray(PCs)) {
             PCs.forEach(pc => {
-            const li = document.createElement('li')
-            li.innerHTML = `
-                        <div class="pc-meta">
-                            <span class="img">🖥️</span>
-                            <div class="pc-info">
-                                <span class="pc-name">${pc.name}</span>
-                                <span class="pc-mac">${pc.mac}</span>
+                const li = document.createElement('li')
+                li.innerHTML = `
+                            <div class="pc-meta">
+                                <span class="img">🖥️</span>
+                                <div class="pc-info">
+                                    <span class="pc-name">${pc.name}</span>
+                                    <span class="pc-mac">${pc.mac}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="pc-btns">
-                            <button class="delete-btn btn">🗑️</button>
-                            <button class="turn-btn" data-mac="${pc.mac}">🔴</button>
-                        </div>`
-            const deleteBtn = li.querySelector('.delete-btn')
-            const turnBtn = li.querySelector('.turn-btn')
+                            <div class="pc-btns">
+                                <button class="delete-btn btn">🗑️</button>
+                                <button class="turn-btn" data-id="${pc.id || PCs.indexOf(pc) + 1}">🔴</button>
+                            </div>`
+                const deleteBtn = li.querySelector('.delete-btn')
+                const turnBtn = li.querySelector('.turn-btn')
 
-            deleteBtn.addEventListener('click', () => {
-                li.remove()
-                deletePc(pc.mac)
-            })
-            turnBtn.addEventListener('click', async () => { 
-                const result = await turnPc(pc.mac) 
-                if (! result) {
-                    return
-                }
-                turnBtn.textContent = '🟢'
-            })
+                deleteBtn.addEventListener('click', () => {
+                    deletePc(pc.id)
+                })
+                turnBtn.addEventListener('click', async () => { 
+                    const result = await turnPc(pc.mac) 
+                    if (! result) {
+                        return
+                    }
+                    turnBtn.textContent = '🟢'
+                })
 
-            pcList.appendChild(li)
-        })
+                li.addEventListener('click', (e) => {
+                    if (e.target === deleteBtn || e.target === turnBtn) return
+                    editModal.classList.add('active')
+                    editPcId = pc.id
+                    rename.value = PCs[editPcId - 1].name
+                    remac.value = PCs[editPcId - 1].mac
+                })
+
+                pcList.appendChild(li)
+            })
     } else {
         pcList.innerHTML = '<li class="empty-li">Пусто</li>'
     }
 }
 
 // Удаление компа
-function deletePc(mac) {
-    const deletablePC = PCs.find(pc => pc.mac === mac)
+function deletePc(id) {
+    const deletablePC = PCs.find(pc => pc.id === id)
     if (!deletablePC) {
         return
     }
     PCs = PCs.filter(pc => {
-        pc.mac !== mac
+        return pc !== deletablePC
     })
     cachePCS(PCs)
-    getPCsFromCache()
     renderPC()
 }
 
@@ -186,7 +210,6 @@ function addingPC(pc) {
     if (typeof pc === 'object' && pc.name && pc.mac) {
         PCs.push(pc)
         cachePCS(PCs)
-        getPCsFromCache()
         renderPC()
     }
 }
@@ -276,6 +299,7 @@ submit.addEventListener('click', () => {
     if (hasError) return
 
     addingPC({
+        id: PCs.length + 1,
         name: currName,
         mac: currMac
     })
@@ -299,8 +323,61 @@ clear.addEventListener('click', () => {
     updateUI()
 })
 
+confirmEdit.addEventListener('click', () => {
+    const newName = rename.value
+    const newMac = remac.value
+    
+    remac.style.borderColor = ''
+    rename.style.borderColor = ''
 
+    let hasError = false
 
+    if (!newName) {
+        rename.style.borderColor = 'var(--danger)'
+        hasError = true
+    }
+    if (!newMac) {
+        remac.style.borderColor = 'var(--danger)'
+        hasError = true
+    }
+
+    PCs.forEach(pc => {
+        if (pc.name === newName && pc.id !== editPcId) {
+            rename.style.borderColor = 'var(--danger)'
+            hasError = true
+        }
+        if (pc.mac === newMac && pc.id !== editPcId) {
+            remac.style.borderColor = 'var(--danger)'
+            hasError = true
+        }
+    })
+
+    if (hasError) return
+
+    editPc({
+        id: editPcId,
+        name: newName,
+        mac: newMac
+    })
+    remac.style.borderColor = ''
+    rename.style.borderColor = ''
+    editModal.classList.remove('active')
+})
+
+cancelEdit.addEventListener('click', () => {
+    editModal.classList.remove('active')
+    rename.value = ''
+    remac.value = ''
+})
+
+function editPc(newData){
+    if (typeof newData === 'object' && newData.name && newData.id && newData.mac){
+        const id = newData.id
+        PCs[id - 1] = newData
+        cachePCS(PCs)
+        renderPC()
+    }
+}
 
 
 
