@@ -361,3 +361,38 @@ input:focus{
 #editModal.active{
     display: flex;
 }
+#editUserData{
+    height: 40px;
+    border-radius: var(--radius);
+    font-size: 18px;
+    font-family: inherit;
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+#editUserData:active{
+    transform: scale(0.9);
+    background: var(--accent);
+}
+#editUDModal{
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+}
+.edit-ud-inner{
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: min(400px, 100% - 40px);
+}

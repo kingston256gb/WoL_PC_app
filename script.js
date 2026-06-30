@@ -28,6 +28,9 @@ const remac = document.querySelector('#macEdit')
 const confirmEdit = document.querySelector('#submitEdit')
 const cancelEdit = document.querySelector('#cancelEdit')
 
+// Изменить данные пользователя
+const editUd = document.querySelector('#editUserData')
+
 // Переменные
 let PCs = []
 let ip = ''
@@ -381,6 +384,12 @@ function editPc(newData){
         renderPC()
     }
 }
+
+editUd.addEventListener('click', () => {
+    register.classList.remove('hidden')
+    ipInp.value = ip
+    portInp.value = port
+})
 
 
 
